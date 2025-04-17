@@ -42,6 +42,10 @@ const RoomTypeProvider = ({ children }) => {
     { name: "United States", img: usa },
   ]);
 
+  
+  const [curentRoom,setCurentRoom] = useState({});
+
+
   //Danh sách phòng
   const [rooms, setRooms] = useState([]);
   // Danh sách các loại phòng với icon tương ứng
@@ -113,11 +117,14 @@ const RoomTypeProvider = ({ children }) => {
       }
     };
 
+
+
+
     fetchRoomTypes();
     fetchAmenities();
     fetchServices();
     fetchRooms();
-    console.log(rooms);
+  
   }, []);
 
   // Xử lý thay đổi loại phòng
@@ -150,7 +157,16 @@ const RoomTypeProvider = ({ children }) => {
     });
   };
 
-  const filteredRooms = rooms.filter((room) => {});
+
+      // setCurentRoom(filteredRooms[0]);
+      const handleClickRoom = (roomID) => {
+
+        const selectedRoom = rooms.find(room => room.roomID === roomID);
+        setCurentRoom(selectedRoom);
+
+      }
+  
+
 
   return (
     <RoomTypeContext.Provider
@@ -170,6 +186,8 @@ const RoomTypeProvider = ({ children }) => {
         rooms,
         isLoading,
         error,
+        handleClickRoom,
+        curentRoom
       }}
     >
       {children}

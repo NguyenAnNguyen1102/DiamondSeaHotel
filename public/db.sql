@@ -298,25 +298,3 @@ END;
 
 
 
-SELECT roomTypeID, name, pathImg FROM roomtypes
-
-
-SELECT location FROM rooms
-
-SELECT * FROM amenities
-SELECT * FROM services
-
-
-SELECT r.roomID, r.price, r.bedType, r.bedCount, location,
-	    r.roomTypeID, rt.`name` AS roomTypeName ,
-		 ri.imageID, ri.pathImg, 
-		 s.serviceID AS serviceID, s.`name` AS serviceName,
-		 a.amenityID AS amenityID, a.`name` AS amenityName  
-FROM rooms r   JOIN roomtypes rt ON r.roomTypeID=rt.roomTypeID 
-					JOIN roomimages ri ON r.roomID=ri.roomID
-					JOIN room_service rs ON r.roomID=rs.roomID JOIN services s ON rs.serviceID=s.serviceID
-					JOIN room_amenity ra ON r.roomID=ra.roomID JOIN amenities a ON ra.amenityID=a.amenityID
-					
-					
-					
-SELECT * FROM amenities

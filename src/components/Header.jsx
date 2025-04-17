@@ -1,7 +1,6 @@
-import React, {
+import {
   useEffect,
   useState,
-  useCallback,
   useRef,
   useContext,
 } from "react";
@@ -13,9 +12,9 @@ import UserActions from "./UserActions";
 import SearchbarFiller from "./SearchbarFiller";
 import FilterBar from "./FilterBar"; // Import FilterBar component
 import { Link } from "react-router-dom";
-import { RoomTypeContext } from "../hooks/RoomProvider";
+import { RoomTypeContext } from "../context/RoomProvider";
 import { useLocation } from "react-router-dom";
-import { NavigateContext } from "../hooks/NavigateProvider";
+import { NavigateContext } from "../context/NavigateProvider";
 
 const Header = () => {
   const { paths } = useContext(NavigateContext);
@@ -135,14 +134,14 @@ const Header = () => {
         </Container>
       </Navbar>
       {
-        <Navbar
-          className="filter-bar border-bottom py-3 bg-white"
-          style={{ zIndex: 1 }}
-        >
-          <Container className="d-flex justify-content-center">
-            <FilterBar />
-          </Container>
-        </Navbar>
+        // <Navbar
+        //   className="filter-bar border-bottom py-3 bg-white"
+        //   style={{ zIndex: 1 }}
+        // >
+        //   <Container className="d-flex justify-content-center">
+        //     <FilterBar />
+        //   </Container>
+        // </Navbar>
       }
     </div>
   );

@@ -1,18 +1,23 @@
 
-import { useContext, useState } from "react";
-import Header from "../components/Header";
+import { useContext} from "react";
 import RoomList from "../components/RoomList";
-import About from "./About";
-import Footer from "../components/Footer";
-import { Route, Routes } from "react-router-dom";
-import Contact from "./Contact";
-import { RoomTypeContext } from "../hooks/RoomProvider";
+import { RoomTypeContext } from "../context/RoomProvider";
+import FilterBar from "../components/FilterBar";
+import { Navbar, Container } from "react-bootstrap";
 
 const Home = () => {
   const { rooms } = useContext(RoomTypeContext);
-  // console.log(rooms);
+
   return (
     <>
+          <Navbar
+          className="filter-bar border-bottom py-3 bg-white"
+          style={{ zIndex: 1 }}
+          >
+          <Container className="d-flex justify-content-center">
+            <FilterBar />
+          </Container>
+        </Navbar>
       <RoomList rooms={rooms} />
     </>
   );

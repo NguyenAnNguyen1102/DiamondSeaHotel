@@ -1,9 +1,7 @@
 import React, { useState, useContext } from "react";
 import { Container, Form, Button, Card, Row, Col, Alert } from "react-bootstrap";
 import { Link, useNavigate } from "react-router-dom";
-import Footer from "../components/Footer";
-import { AuthContext } from "../hooks/AuthProvider";
-import Header from "../components/Header";
+import { AuthContext } from "../context/AuthProvider";
 
 const Login = () => {
     const [formData, setFormData] = useState({
@@ -11,6 +9,7 @@ const Login = () => {
         password: "",
     });
     const [error, setError] = useState("");
+    const [loading, setLoading] = useState(false);
     const navigate = useNavigate();
     const { login } = useContext(AuthContext);
 
@@ -22,17 +21,25 @@ const Login = () => {
         });
     };
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
         setError("");
 
         if (formData.email && formData.password) {
-            const result = login(formData.email, formData.password);
+            setLoading(true);
+            try {
+                const result = await login(formData.email, formData.password);
 
-            if (result.success) {
-                navigate("/");
-            } else {
-                setError(result.message);
+                if (result.success) {
+                    navigate("/");
+                } else {
+                    setError(result.message);
+                }
+            } catch (error) {
+                setError("Đã xảy ra lỗi khi đăng nhập");
+                console.error(error);
+            } finally {
+                setLoading(false);
             }
         } else {
             setError("Vui lòng điền đầy đủ thông tin đăng nhập");
@@ -74,8 +81,13 @@ const Login = () => {
                                     </Form.Group>
 
                                     <div className="d-grid">
-                                        <Button variant="danger" type="submit" className="py-2 rounded-3">
-                                            Đăng nhập
+                                        <Button
+                                            variant="danger"
+                                            type="submit"
+                                            className="py-2 rounded-3"
+                                            disabled={loading}
+                                        >
+                                            {loading ? "Đang đăng nhập..." : "Đăng nhập"}
                                         </Button>
                                     </div>
                                 </Form>

@@ -1,7 +1,7 @@
 import React, { useContext } from "react";
 import { Link } from "react-router-dom";
-import { NavigateContext } from "../hooks/NavigateProvider";
-import { AuthContext } from "../hooks/AuthProvider";
+import { NavigateContext } from "../context/NavigateProvider";
+import { AuthContext } from "../context/AuthProvider";
 
 const UserActionDropdown = () => {
   const { paths } = useContext(NavigateContext);

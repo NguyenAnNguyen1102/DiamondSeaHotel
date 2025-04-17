@@ -3,7 +3,7 @@ import { Container, Form, Button, Card, Row, Col, Alert, Nav, Tab } from "react-
 import { Link, useNavigate } from "react-router-dom";
 import Footer from "../components/Footer";
 import Header from "../components/Header";
-import { AuthContext } from "../hooks/AuthProvider";
+import { AuthContext } from "../context/AuthProvider";
 
 const Profile = () => {
     const { isAuthenticated, user, logout } = useContext(AuthContext);

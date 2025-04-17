@@ -1,0 +1,418 @@
+/* src/Css/BookingHistory.css */
+.booking-history-wrapper {
+  background-color: #f5f5f5;
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  padding: 20px;
+}
+
+.booking-history-container {
+  max-width: 1200px;
+  width: 100%;
+  background-color: #fff;
+  border-radius: 10px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  padding: 20px;
+}
+
+.booking-history-header {
+  text-align: center;
+  padding: 20px 0;
+  background-color  : #24308D;
+  border-radius: 10px 10px 0 0;
+  color: #fff;
+}
+
+.booking-history-header h1 {
+  margin: 0;
+  font-size: 2rem;
+}
+
+.subtitle {
+  margin: 5px 0 0;
+  font-size: 1rem;
+  opacity: 0.8;
+}
+
+.booking-list {
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.no-bookings {
+  text-align: center;
+  color: #7f8c8d;
+  font-size: 1.1rem;
+}
+
+.booking-card {
+  background-color: #fff;
+  border-radius: 8px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+  transition: all 0.3s ease;
+}
+
+.booking-card-header {
+  display: flex;
+  align-items: center;
+  padding: 15px;
+  gap: 15px;
+  background-color: #f9f9f9;
+}
+
+.booking-card-image img {
+  width: 160px;
+  height: 100px;
+  object-fit: cover;
+  border-radius: 5px;
+  border: 1px solid #e0e0e0;
+}
+
+.booking-card-info {
+  flex: 1;
+}
+
+.booking-title {
+  font-size: 1.2rem;
+  color: #2c3e50;
+  margin: 0 0 5px;
+}
+
+.booking-dates {
+  display: flex;
+  gap: 15px;
+  font-size: 0.9rem;
+  color: #7f8c8d;
+}
+
+.booking-dates span {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.booking-dates i {
+  color: #3498db;
+}
+
+.booking-price {
+  font-size: 1rem;
+  color: #e74c3c;
+  font-weight: 600;
+  margin: 5px 0 0;
+}
+
+.details-btn {
+  background-color: #24308D;
+  color: #fff;
+  border: none;
+  padding: 8px 15px;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 0.9rem;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  transition: background-color 0.3s ease;
+}
+
+.details-btn:hover {
+  background-color:  #3644ae;
+  box-shadow: 0 0 5px #4f63f6;
+}
+
+.details-btn i {
+  font-size: 0.8rem;
+}
+
+.booking-card-details {
+  padding: 15px;
+  background-color: #fff;
+  animation: slideDown 0.3s ease;
+}
+
+@keyframes slideDown {
+  from {
+    height: 0;
+    opacity: 0;
+  }
+  to {
+    height: auto;
+    opacity: 1;
+  }
+}
+
+.separator {
+  border-top: 1px solid #e0e0e0;
+  margin: 10px 0;
+}
+
+.booking-card-details h4 {
+  font-size: 1.1rem;
+  color: #34495e;
+  margin-bottom: 10px;
+}
+
+.booking-info {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.booking-info-row {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.9rem;
+}
+
+.label {
+  color: #7f8c8d;
+  font-weight: 500;
+}
+
+.value {
+  color: #2c3e50;
+  font-weight: 400;
+}
+
+.highlight {
+  color: #e74c3c;
+  font-weight: 600;
+}
+
+.badge {
+  background-color: #ecf0f1;
+  padding: 4px 8px;
+  border-radius: 5px;
+  margin-right: 5px;
+  font-size: 0.8rem;
+  color: #2c3e50;
+}
+
+.policy {
+  color: #27ae60;
+}
+
+.star1 {
+  color: #f1c40f;
+  font-size: 1rem;
+}
+
+.star-empty {
+  color: #dfe6e9;
+  font-size: 1rem;
+}
+
+.image-gallery {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.room-image {
+  width: 80px;
+  height: 60px;
+  object-fit: cover;
+  border-radius: 5px;
+  border: 1px solid #e0e0e0;
+}
+
+
+.booking-actions {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+
+
+.cancel-btn {
+  background-color: #dc3545;
+  color: white;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 4px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.cancel-btn:hover {
+  background-color: #b02a37;
+}
+/* CSS cho phần bộ lọc */
+.booking-filters {
+  background-color: #f9f9f9;
+  border-radius: 8px;
+  padding: 16px;
+  margin-bottom: 24px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+}
+
+.filter-tabs {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 16px;
+  border-bottom: 1px solid #e0e0e0;
+  padding-bottom: 12px;
+}
+
+.filter-tab {
+  padding: 8px 16px;
+  background: #f0f0f0;
+  border: none;
+  border-radius: 20px;
+  cursor: pointer;
+  font-weight: 500;
+  transition: all 0.3s ease;
+}
+
+.filter-tab:hover {
+  background: #e0e0e0;
+}
+
+.filter-tab.active {
+  background: #0056b3;
+  color: white;
+}
+
+.date-filter {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 16px;
+}
+
+.date-inputs {
+  display: flex;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.date-input-group {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.date-input-group label {
+  font-weight: 500;
+  white-space: nowrap;
+}
+
+.date-input-group input {
+  padding: 8px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.clear-filter-btn, .reset-filter-btn {
+  padding: 8px 16px;
+  background: #f44336;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.clear-filter-btn:hover, .reset-filter-btn:hover {
+  background: #d32f2f;
+}
+
+.clear-filter-btn:disabled {
+  background: #cccccc;
+  cursor: not-allowed;
+}
+
+.filter-result-count {
+  margin-bottom: 16px;
+  font-size: 14px;
+  color: #555;
+}
+
+.filter-result-count span {
+  font-weight: bold;
+  color: #0056b3;
+}
+
+.no-bookings {
+  text-align: center;
+  padding: 32px;
+  background: #f9f9f9;
+  border-radius: 8px;
+  margin-top: 16px;
+}
+
+/* Badges trạng thái */
+.status-badge {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  padding: 4px 10px;
+  color: white;
+  font-size: 12px;
+  font-weight: 600;
+  border-radius: 12px;
+}
+
+.status-badge.completed {
+  background-color: #4caf50;
+}
+
+.status-badge.upcoming {
+  background-color: #2196f3;
+}
+
+.booking-card {
+  position: relative;
+  border-left: 4px solid #ccc;
+}
+
+.booking-card.completed {
+  border-left-color: #4caf50;
+}
+
+.booking-card.upcoming {
+  border-left-color: #2196f3;
+}
+
+.booking-card-image {
+  position: relative;
+}
+
+/* Đảm bảo responsive */
+@media (max-width: 768px) {
+  .date-filter {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  
+  .filter-tabs {
+    overflow-x: auto;
+    white-space: nowrap;
+    padding-bottom: 8px;
+  }
+  
+  .date-inputs {
+    width: 100%;
+  }
+  
+  .date-input-group {
+    flex: 1;
+    min-width: 140px;
+  }
+  
+  .date-input-group input {
+    width: 100%;
+  }
+  
+  .clear-filter-btn {
+    align-self: flex-end;
+  }
+}

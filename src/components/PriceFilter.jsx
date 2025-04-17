@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useContext } from "react";
-import { RoomTypeContext } from "../hooks/RoomProvider";
+import { RoomTypeContext } from "../context/RoomProvider";
 
 const PriceFilter = () => {
   const { filters, setPriceRange } = useContext(RoomTypeContext);

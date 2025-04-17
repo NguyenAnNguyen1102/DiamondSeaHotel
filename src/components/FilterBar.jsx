@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef, useContext } from "react";
 import { ChevronDown, Home } from "lucide-react";
 import PriceFilter from "./PriceFilter";
-import { RoomTypeContext } from "../hooks/RoomProvider";
+import { RoomTypeContext } from "../context/RoomProvider";
 import RoomTypeFilter from "./RoomTypeFilter";
 
 const FilterBar = () => {

@@ -1,5 +1,5 @@
 import React, { useContext } from "react";
-import { RoomTypeContext } from "../hooks/RoomProvider";
+import { RoomTypeContext } from "../context/RoomProvider";
 
 const RoomTypeFilter = () => {
   const { roomTypes, handleRoomTypeChange, filters } =

@@ -1,6 +1,7 @@
-import React, { useState, useEffect, useRef } from "react";
-import { useParams } from "react-router-dom";
+import { useState } from "react";
+import { useParams, useNavigate } from "react-router-dom";
 import { useBooking } from "../context/BookingContext";
+
 import {
   FaBed,
   FaParking,
@@ -42,55 +43,33 @@ const RoomDetail = () => {
   const { id = 2 } = useParams();
   const { bookingData, updateBooking, errors, validateBooking } = useBooking();
   const [showSuccess, setShowSuccess] = useState(false);
-  const initialRender = useRef(true);
-  const [formData, setFormData] = useState({
-    checkInDate: '',
-    checkOutDate: '',
-    guests: 1,
-    roomId: parseInt(id)
-  });
-  console.log("from data");
-  console.log(formData);
-  console.log("booking data");
-  console.log(bookingData);
+  const navigate = useNavigate();
 
-  useEffect(() => {
-    if (initialRender.current) {
-      setFormData(prev => ({
-        ...prev,
-        roomId: parseInt(id)
-      }));
-      initialRender.current = false;
-    }
-  }, [id]);
-
-  const handleInputChange = (e) => {
-    const { name, value } = e.target;
-    setFormData(prev => ({
-      ...prev,
-      [name]: value
-    }));
+  // Dữ liệu phòng (giả lập)
+  const room = {
+    roomID: parseInt(id),
+    name: `Luxury Ocean View Room ${id}`,
+    price: "100.00",
+    dienTich: 25.5,
+    soNguoi: 2,
+    bedType: "Double",
+    bedCount: 1,
+    danhGia: 4.5,
+    moTa: "Phòng sang trọng với view hướng biển tuyệt đẹp, được thiết kế theo phong cách hiện đại pha lẫn nét đẹp truyền thống. Phòng được trang bị đầy đủ tiện nghi cao cấp, mang đến trải nghiệm nghỉ dưỡng tuyệt vời cho quý khách.",
+    location: `Tầng ${Math.ceil(parseInt(id) / 10)}, Khu Diamond Sea`,
+    roomType: "Luxury",
+    coordinates: {
+      lat: 10.925104878716811,
+      lng: 108.12161601762978,
+    },
+    images: [room1, room1, room1, room1, room1],
+    services: ["Parking", "Breakfast", "Wi-Fi"],
+    amenities: ["Minibar", "Air Conditioning", "TV"],
+    address:
+      "Diamond Sea Hotel, Nguyễn Thị Thập, Phường Phú Hài, Phan Thiết, Bình Thuận",
   };
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    
-    if (validateBooking(formData)) {
-      const nights = Math.ceil(
-        (new Date(formData.checkOutDate) - new Date(formData.checkInDate)) / (1000 * 60 * 60 * 24)
-      );
-      const totalPrice = parseFloat(room.price) * nights + 10;
-      
-      // Cập nhật toàn bộ dữ liệu booking khi submit form
-      updateBooking({
-        ...formData,
-        totalPrice
-      });
-      setShowSuccess(true);
-    }
-  };
-
-  // Thêm dữ liệu các địa điểm lân cận
+  // Dữ liệu địa điểm lân cận
   const nearbyPlaces = [
     {
       name: "Bãi biển Mũi Né",
@@ -118,35 +97,60 @@ const RoomDetail = () => {
     },
   ];
 
-  const room = {
-    roomID: parseInt(id),
-    name: `Luxury Ocean View Room ${id}`,
-    price: "100.00",
-    dienTich: 25.5,
-    soNguoi: 2,
-    bedType: "Double",
-    bedCount: 1,
-    danhGia: 4.5,
-    moTa: "Phòng sang trọng với view hướng biển tuyệt đẹp, được thiết kế theo phong cách hiện đại pha lẫn nét đẹp truyền thống. Phòng được trang bị đầy đủ tiện nghi cao cấp, mang đến trải nghiệm nghỉ dưỡng tuyệt vời cho quý khách.",
-    location: `Tầng ${Math.ceil(parseInt(id) / 10)}, Khu Diamond Sea`,
-    roomType: "Luxury",
-    coordinates: {
-      lat: 10.925104878716811, // Tọa độ của Diamond Sea Hotel
-      lng: 108.12161601762978,
-    },
-    images: [room1, room1, room1, room1, room1],
-    services: ["Parking", "Breakfast", "Wi-Fi"],
-    amenities: ["Minibar", "Air Conditioning", "TV"],
-    address:
-      "Diamond Sea Hotel, Nguyễn Thị Thập, Phường Phú Hài, Phan Thiết, Bình Thuận",
+  // Hàm tính số đêm
+  const calculateNights = () => {
+    if (!bookingData.checkInDate || !bookingData.checkOutDate) {
+      return 1;
+    }
+    const checkIn = new Date(bookingData.checkInDate);
+    const checkOut = new Date(bookingData.checkOutDate);
+    return Math.ceil((checkOut - checkIn) / (1000 * 60 * 60 * 24));
   };
 
-  // Style cho container bản đồ
-  const mapStyle = {
-    height: "400px",
-    width: "100%",
-    borderRadius: "8px",
-    zIndex: 1,
+  // Hàm tính tổng tiền
+  const calculateTotalPrice = () => {
+    if (!bookingData.checkInDate || !bookingData.checkOutDate) {
+      return parseFloat(room.price) + 10;
+    }
+    const nights = calculateNights();
+    return parseFloat(room.price) * nights + 10;
+  };
+
+  // Xử lý thay đổi input
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    if (name === "guests" && parseInt(value) > room.soNguoi) {
+      alert(`Phòng này chỉ chứa tối đa ${room.soNguoi} khách.`);
+      return;
+    }
+    updateBooking({ [name]: value });
+  };
+
+  // Xử lý submit form
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    console.log("Submitting form:", bookingData);
+    if (!bookingData.checkInDate || !bookingData.checkOutDate) {
+      alert("Vui lòng chọn ngày nhận phòng và trả phòng.");
+      return;
+    }
+
+    const checkIn = new Date(bookingData.checkInDate);
+    const checkOut = new Date(bookingData.checkOutDate);
+
+    if (checkOut <= checkIn) {
+      alert("Ngày trả phòng phải sau ngày nhận phòng.");
+      return;
+    }
+
+    if (validateBooking(bookingData)) {
+      const nights = calculateNights();
+      const totalPrice = parseFloat(room.price) * nights + 10;
+
+      updateBooking({ totalPrice });
+      setShowSuccess(true);
+      navigate("/InputInfomation");
+    }
   };
 
   // Hàm mở chỉ đường
@@ -154,6 +158,14 @@ const RoomDetail = () => {
     window.open(
       `https://www.openstreetmap.org/directions?from=&to=${lat},${lng}`
     );
+  };
+
+  // Style cho bản đồ
+  const mapStyle = {
+    height: "400px",
+    width: "100%",
+    borderRadius: "8px",
+    zIndex: 1,
   };
 
   return (
@@ -342,7 +354,7 @@ const RoomDetail = () => {
                     dragging={true}
                   >
                     <TileLayer
-                      attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+                      attribution='© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
                       url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
                     />
                     {/* Marker khách sạn */}
@@ -446,13 +458,13 @@ const RoomDetail = () => {
                         <Form.Label className="small fw-bold">
                           NHẬN PHÒNG
                         </Form.Label>
-                        <Form.Control 
-                          type="date" 
+                        <Form.Control
+                          type="date"
                           className="rounded-3"
                           name="checkInDate"
-                          value={formData.checkInDate}
+                          value={bookingData.checkInDate}
                           onChange={handleInputChange}
-                          min={new Date().toISOString().split('T')[0]}
+                          min={new Date().toISOString().split("T")[0]}
                         />
                         {errors.checkInDate && (
                           <Form.Text className="text-danger">
@@ -466,13 +478,16 @@ const RoomDetail = () => {
                         <Form.Label className="small fw-bold">
                           TRẢ PHÒNG
                         </Form.Label>
-                        <Form.Control 
-                          type="date" 
+                        <Form.Control
+                          type="date"
                           className="rounded-3"
                           name="checkOutDate"
-                          value={formData.checkOutDate}
+                          value={bookingData.checkOutDate}
                           onChange={handleInputChange}
-                          min={formData.checkInDate || new Date().toISOString().split('T')[0]}
+                          min={
+                            bookingData.checkInDate ||
+                            new Date().toISOString().split("T")[0]
+                          }
                         />
                         {errors.checkOutDate && (
                           <Form.Text className="text-danger">
@@ -485,10 +500,10 @@ const RoomDetail = () => {
 
                   <Form.Group className="mb-4">
                     <Form.Label className="small fw-bold">KHÁCH</Form.Label>
-                    <Form.Select 
+                    <Form.Select
                       className="rounded-3"
                       name="guests"
-                      value={formData.guests}
+                      value={bookingData.guests}
                       onChange={handleInputChange}
                     >
                       <option value="1">1 khách</option>
@@ -510,18 +525,14 @@ const RoomDetail = () => {
                   </Button>
                 </Form>
 
-                {showSuccess && (
-                  <div className="alert alert-success">
-                     Tổng tiền: ${bookingData.totalPrice}
-                  </div>
-                )}
-
                 <div className="border-top pt-3">
                   <div className="d-flex justify-content-between mb-2">
-                    <span>${room.price} x {formData.checkInDate && formData.checkOutDate ? 
-                      Math.ceil((new Date(formData.checkOutDate) - new Date(formData.checkInDate)) / (1000 * 60 * 60 * 24)) : 1} đêm</span>
-                    <span>${formData.checkInDate && formData.checkOutDate ? 
-                      parseFloat(room.price) * Math.ceil((new Date(formData.checkOutDate) - new Date(formData.checkInDate)) / (1000 * 60 * 60 * 24)) : parseFloat(room.price)}</span>
+                    <span>
+                      ${room.price} x {calculateNights()} đêm
+                    </span>
+                    <span>
+                      ${(parseFloat(room.price) * calculateNights()).toFixed(2)}
+                    </span>
                   </div>
                   <div className="d-flex justify-content-between mb-2">
                     <span>Phí dịch vụ</span>
@@ -529,8 +540,7 @@ const RoomDetail = () => {
                   </div>
                   <div className="d-flex justify-content-between fw-bold mt-3 pt-3 border-top">
                     <span>Tổng tiền</span>
-                    <span>${formData.checkInDate && formData.checkOutDate ? 
-                      parseFloat(room.price) * Math.ceil((new Date(formData.checkOutDate) - new Date(formData.checkInDate)) / (1000 * 60 * 60 * 24)) + 10 : parseFloat(room.price) + 10}</span>
+                    <span>${calculateTotalPrice().toFixed(2)}</span>
                   </div>
                 </div>
               </Card.Body>

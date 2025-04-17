@@ -1,8 +1,16 @@
 import React, { createContext, useState, useEffect } from "react";
+import axios from "axios";
 
-export const AuthContext = createContext({});
+export const AuthContext = createContext();
 
-const AuthProvider = ({ children }) => {
+const api = axios.create({
+    baseURL: 'http://localhost:3000',
+    headers: {
+        'Content-Type': 'application/json',
+    },
+});
+
+export const AuthProvider = ({ children }) => {
     const [isAuthenticated, setIsAuthenticated] = useState(false);
     const [user, setUser] = useState(null);
     const [loading, setLoading] = useState(true);
@@ -23,23 +31,38 @@ const AuthProvider = ({ children }) => {
     }, []);
 
     // Hàm đăng nhập
-    const login = (email, password) => {
-        // Kiểm tra xem người dùng đã đăng ký chưa
-        const registeredUsers = JSON.parse(localStorage.getItem("users") || "[]");
-        const foundUser = registeredUsers.find(user => user.email === email && user.password === password);
+    const login = async (email, password) => {
+        try {
+            const response = await api({
+                method: 'post',
+                url: '/login',
+                data: { email, password }
+            });
 
-        if (foundUser) {
-            const userData = {
-                email: foundUser.email,
-                fullName: foundUser.fullName
+            if (response.data.success) {
+                const userData = response.data.user;
+
+                // Lưu thông tin người dùng vào localStorage
+                localStorage.setItem("user", JSON.stringify(userData));
+
+                // Cập nhật state
+                setUser(userData);
+                setIsAuthenticated(true);
+
+                return { success: true };
+            } else {
+                return {
+                    success: false,
+                    message: response.data.message || "Đăng nhập thất bại"
+                };
+            }
+        } catch (error) {
+            console.error("Lỗi đăng nhập:", error);
+            return {
+                success: false,
+                message: error.response?.data?.message || "Email hoặc mật khẩu không chính xác"
             };
-            localStorage.setItem("user", JSON.stringify(userData));
-            setUser(userData);
-            setIsAuthenticated(true);
-            return { success: true };
         }
-
-        return { success: false, message: "Email hoặc mật khẩu không chính xác" };
     };
 
     // Hàm đăng xuất
@@ -50,20 +73,34 @@ const AuthProvider = ({ children }) => {
     };
 
     // Hàm đăng ký
-    const register = (fullName, email, password) => {
-        // Kiểm tra xem email đã tồn tại chưa
-        const registeredUsers = JSON.parse(localStorage.getItem("users") || "[]");
+    const register = async (fullName, email, password) => {
+        try {
+            const response = await api.post('/register', {
+                userName: fullName,
+                email,
+                password
+            });
 
-        if (registeredUsers.some(user => user.email === email)) {
-            return { success: false, message: "Email đã được sử dụng" };
+            if (response.data.success) {
+                return { success: true };
+            } else {
+                return {
+                    success: false,
+                    message: response.data.message || "Đăng ký thất bại"
+                };
+            }
+        } catch (error) {
+            console.error("Lỗi đăng ký:", error);
+            return {
+                success: false,
+                message: error.response?.data?.message || "Email đã được sử dụng"
+            };
         }
+    };
 
-        // Thêm người dùng mới
-        const newUser = { fullName, email, password };
-        registeredUsers.push(newUser);
-        localStorage.setItem("users", JSON.stringify(registeredUsers));
 
-        return { success: true };
+    const updateUser = (updatedUser) => {
+        setUser(updatedUser);
     };
 
     const authContextValue = {
@@ -73,6 +110,7 @@ const AuthProvider = ({ children }) => {
         login,
         logout,
         register,
+        updateUser
     };
 
     return (
@@ -82,4 +120,3 @@ const AuthProvider = ({ children }) => {
     );
 };
 
-export default AuthProvider; 

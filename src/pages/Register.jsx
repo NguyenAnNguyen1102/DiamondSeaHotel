@@ -1,9 +1,7 @@
 import React, { useState, useContext } from "react";
 import { Container, Form, Button, Card, Row, Col, Alert } from "react-bootstrap";
 import { Link, useNavigate } from "react-router-dom";
-import Footer from "../components/Footer";
-import { AuthContext } from "../hooks/AuthProvider";
-import Header from "../components/Header";
+import { AuthContext } from "../context/AuthProvider";
 
 const Register = () => {
     const [formData, setFormData] = useState({
@@ -13,6 +11,7 @@ const Register = () => {
         confirmPassword: "",
     });
     const [error, setError] = useState("");
+    const [loading, setLoading] = useState(false);
     const navigate = useNavigate();
     const { register } = useContext(AuthContext);
 
@@ -24,7 +23,7 @@ const Register = () => {
         });
     };
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
         setError("");
 
@@ -35,12 +34,20 @@ const Register = () => {
         }
 
         if (formData.fullName && formData.email && formData.password) {
-            const result = register(formData.fullName, formData.email, formData.password);
+            setLoading(true);
+            try {
+                const result = await register(formData.fullName, formData.email, formData.password);
 
-            if (result.success) {
-                navigate("/login");
-            } else {
-                setError(result.message);
+                if (result.success) {
+                    navigate("/login");
+                } else {
+                    setError(result.message);
+                }
+            } catch (error) {
+                setError("Đã xảy ra lỗi khi đăng ký");
+                console.error(error);
+            } finally {
+                setLoading(false);
             }
         } else {
             setError("Vui lòng điền đầy đủ thông tin");
@@ -106,8 +113,13 @@ const Register = () => {
                                     </Form.Group>
 
                                     <div className="d-grid">
-                                        <Button variant="danger" type="submit" className="py-2 rounded-3">
-                                            Đăng ký
+                                        <Button
+                                            variant="danger"
+                                            type="submit"
+                                            className="py-2 rounded-3"
+                                            disabled={loading}
+                                        >
+                                            {loading ? "Đang xử lý..." : "Đăng ký"}
                                         </Button>
                                     </div>
                                 </Form>
